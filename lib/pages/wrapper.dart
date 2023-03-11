@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quiz_03/pages/game/list.dart';
 import 'package:provider/provider.dart';
 
 import '../models/games.dart';
-import '../models/player.dart';
-import '../services/database.dart';
 import 'dashboard.dart';
-import 'game/add.dart';
-import 'lobby/list.dart';
 
 class GameWrapper extends StatefulWidget {
   final String code;

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_03/pages/lobby/list.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 import '../../models/games.dart';
+import '../../models/player.dart';
 import '../../services/database.dart';
 
 class GameJoin extends StatefulWidget {
@@ -19,7 +21,7 @@ class _GameJoinState extends State<GameJoin> {
   Game g = Game(code: '', name: '', status: '', totalQuestion: 0);
 
   // form values
-  String _code = '';
+  String _quizCode = '';
   String _name = '';
 
   // Declare this variable
@@ -70,7 +72,7 @@ class _GameJoinState extends State<GameJoin> {
                   return val!.isEmpty ? 'Silahkan masukan kode kuis' : null;
                 },
                 onChanged: (val) {
-                  setState(() => _code = val.trim());
+                  setState(() => _quizCode = val.trim());
                 },
               ),
               const SizedBox(height: 20.0),
@@ -100,12 +102,33 @@ class _GameJoinState extends State<GameJoin> {
                         if (_formKey.currentState!.validate()) {
                           if (list.isNotEmpty) {
                             g = list
-                                .where((element) => element.code == _code)
+                                .where((element) => element.code == _quizCode)
                                 .single;
 
                             if (g.status == '2') {
-                              await DatabaseService(uid: '', code: _code)
-                                  .addPlayer(_name);
+                              await DatabaseService(uid: '', code: _quizCode)
+                                  .addPlayer(_name)
+                                  .then((value) => Navigator.pushAndRemoveUntil(
+                                          context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return MultiProvider(
+                                            providers: [
+                                              StreamProvider<
+                                                  List<Player>>.value(
+                                                value: DatabaseService(
+                                                  uid: '',
+                                                  code: _quizCode,
+                                                ).playerListByCode,
+                                                initialData: const [],
+                                              ),
+                                            ],
+                                            child: GameLobby(
+                                              code: _quizCode,
+                                              title: g.name,
+                                            ),
+                                          );
+                                        },
+                                      ), (route) => false));
                             } else {
                               // Can't join game are clossd
                             }
