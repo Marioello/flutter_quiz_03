@@ -5,6 +5,7 @@ import '../../constants.dart';
 import '../../models/games.dart';
 import '../../models/player.dart';
 import '../../pages/lobby/list.dart';
+import '../../resources/player.dart';
 import '../../services/database.dart';
 
 class PlayerPage extends StatefulWidget {
@@ -17,20 +18,13 @@ class PlayerPage extends StatefulWidget {
 class _PlayerPageState extends State<PlayerPage> {
   final _formKey = GlobalKey<FormState>();
 
-  ///
-  // Game g = Game(code: '', name: '', status: '', totalQuestion: 0);
-
   String _quizCode = '';
   String _name = '';
-
-  ///
-  bool _isExists = false;
 
   @override
   Widget build(BuildContext context) {
     final gList = Provider.of<List<Game>>(context);
     final pList = Provider.of<List<Player2>>(context);
-    // final db = DatabaseService(uid: '', code: _quizCode);
 
     ///
     return Scaffold(
