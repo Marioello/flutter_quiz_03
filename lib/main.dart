@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quiz_03/pages/wrapper.dart';
+import 'package:flutter_quiz_03/models/player.dart';
+import 'package:flutter_quiz_03/services/database.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 import 'config/firebase.dart';
 import 'constants.dart';
 import 'models/games.dart';
-import 'models/player.dart';
 import 'pages/dashboard.dart';
-import 'pages/lobby/list.dart';
-import 'services/database.dart';
+import 'users/player/player.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +27,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Dashboard(),
+      // home: const Dashboard(),
+      home: MultiProvider(
+        providers: [
+          StreamProvider<List<Game>>.value(
+            value: DatabaseService(uid: '', code: '').games,
+            initialData: const [],
+          ),
+          StreamProvider<List<Player2>>.value(
+            value: DatabaseService(uid: '', code: '').players2,
+            initialData: const [],
+          ),
+        ],
+        child: const PlayerPage(),
+      ),
       // home: const AddGame(),
       // home: MultiProvider(
       //   providers: [
@@ -70,7 +82,6 @@ class MyApp extends StatelessWidget {
       //   ],
       //   child: const GameLobby(code: '604401', title: 'Create Game 1'),
       // ),
-
       // home: MultiProvider(
       //   providers: [
       //     StreamProvider<List<Game>>.value(

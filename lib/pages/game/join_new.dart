@@ -7,35 +7,21 @@ import '../../models/player.dart';
 import '../../services/database.dart';
 import '../lobby/list.dart';
 
-class GameJoin extends StatefulWidget {
-  const GameJoin({super.key});
+class JoinNew extends StatefulWidget {
+  const JoinNew({super.key});
 
   @override
-  State<GameJoin> createState() => _GameJoinState();
+  State<JoinNew> createState() => _JoinNewState();
 }
 
-class _GameJoinState extends State<GameJoin> {
+class _JoinNewState extends State<JoinNew> {
   final _formKey = GlobalKey<FormState>();
 
-  //
+  ///
   Game g = Game(code: '', name: '', status: '', totalQuestion: 0);
 
-  // form values
   String _quizCode = '';
   String _name = '';
-
-  // Declare this variable
-  int selectedRadio = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedRadio = 0;
-  }
-
-// Changes the selected value on 'onChanged' click on each radio button
-  setSelectedRadio(int val) => setState(() => selectedRadio = val);
-
   @override
   Widget build(BuildContext context) {
     final list = Provider.of<List<Game>>(context);

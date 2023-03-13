@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_03/pages/dashboard.dart';
 import 'package:flutter_quiz_03/pages/lobby/list.dart';
 import 'package:provider/provider.dart';
 
@@ -21,16 +22,24 @@ class LobbyWrapper extends StatelessWidget {
       if (g.single.status == "3") {
         return const Center(child: Text('Game started'));
       }
-    }
 
-    return MultiProvider(
-      providers: [
-        StreamProvider<List<Player>>.value(
-          value: DatabaseService(uid: '', code: code).playerListByCode,
-          initialData: const [],
-        ),
-      ],
-      child: GameLobby(code: code, title: title),
-    );
+      switch (g.single.status) {
+        case '1':
+        case '3':
+          return const Center(child: Text('Game started'));
+        default:
+          return MultiProvider(
+            providers: [
+              StreamProvider<List<Player>>.value(
+                value: DatabaseService(uid: '', code: code).playerListByCode,
+                initialData: const [],
+              ),
+            ],
+            child: GameLobby(code: code, title: title),
+          );
+      }
+    } else {
+      return const Dashboard();
+    }
   }
 }

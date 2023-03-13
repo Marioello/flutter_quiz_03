@@ -108,8 +108,8 @@ class DatabaseService {
   // Add / Edit Question
   Future selectQuestion(String question, String answer, String opt1,
       String opt2, String opt3, String opt4) async {
-    print('uid: $code');
-    print('id: $uid');
+    // print('uid: $code');
+    // print('id: $uid');
     return await FirebaseFirestore.instance
         .collection('games/$code/questions')
         .doc(uid)
@@ -135,9 +135,18 @@ class DatabaseService {
   Future addPlayer(String name) async {
     return await FirebaseFirestore.instance
         .collection('games/$code/players')
-        .doc()
+        .doc(name)
         .set({
       'name': name,
+    });
+  }
+
+  Future addPlayer2(String name) async {
+    return await FirebaseFirestore.instance
+        .collection('players')
+        .doc(name)
+        .set({
+      'code': code,
     });
   }
 
@@ -146,6 +155,14 @@ class DatabaseService {
     return await FirebaseFirestore.instance
         .collection('games/$code/players')
         .doc(uid)
+        .delete();
+  }
+
+  // Delete Player
+  Future deletePlayer2(String name) async {
+    return await FirebaseFirestore.instance
+        .collection('players')
+        .doc(name)
         .delete();
   }
 
@@ -168,9 +185,58 @@ class DatabaseService {
     }
   }
 
+  List<Player2> _playerList2(QuerySnapshot snapshot) {
+    try {
+      return snapshot.docs
+          .map(
+            (e) => Player2(
+              code: e.get('code').toString(),
+              name: e.id,
+            ),
+          )
+          .toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      return [];
+    }
+  }
+
   // Question list by uid
   Stream<List<Player>> get playerListByCode => FirebaseFirestore.instance
       .collection('games/$code/players')
       .snapshots()
       .map(_playerList);
+
+  Stream<List<Player2>> get players2 => FirebaseFirestore.instance
+      .collection('players')
+      .snapshots()
+      .map(_playerList2);
+
+  // Stream<void> get nameExists =>
+  //     FirebaseFirestore.instance.collection('games/$code/payers').doc(name);
+  // bool _playerExists(QuerySnapshot snapshot) {
+  //   try {
+  //     return true;
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print(e.toString());
+  //     }
+  //     return false;
+  //   }
+  // }
+
+  Future<bool> playerExists(String name) async {
+    var data = await FirebaseFirestore.instance
+        .collection('games/$code/players')
+        .doc(name)
+        .get();
+
+    if (data.exists) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

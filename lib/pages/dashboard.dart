@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_03/pages/game/join_new.dart';
 import 'package:provider/provider.dart';
 
 import '../models/games.dart';
@@ -46,6 +47,18 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
                 child: const GameJoin(),
+              ),
+            ),
+            TextButtonWidget(
+              title: 'Join New',
+              widget: MultiProvider(
+                providers: [
+                  StreamProvider<List<Game>>.value(
+                    value: DatabaseService(uid: '', code: '').games,
+                    initialData: const [],
+                  ),
+                ],
+                child: const JoinNew(),
               ),
             ),
             // TextButtonWidget(
